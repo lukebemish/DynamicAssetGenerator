@@ -5,7 +5,7 @@
             "steps": [
                 {
                     "name": "Setup Java",
-                    "run": "echo \"JAVA_HOME=$JAVA_HOME_17_X64\" >> \"$GITHUB_ENV\""
+                    "run": "echo \"JAVA_HOME=$JAVA_HOME_21_X64\" >> \"$GITHUB_ENV\""
                 },
                 {
                     "with": {
@@ -16,13 +16,17 @@
                     "uses": "actions/checkout@v4"
                 },
                 {
+                    "name": "Validate Gradle Wrapper",
+                    "uses": "gradle/actions/wrapper-validation@v3"
+                },
+                {
                     "with": {
-                        "path": "**/.gradle/loom-cache",
+                        "path": "**/.gradle/loom-cache\n**/.gradle/quilt-loom-cache",
                         "key": "${{ runner.os }}-gradle-${{ hashFiles('**/libs.versions.*', '**/*.gradle*', '**/gradle-wrapper.properties') }}",
                         "restore-keys": "${{ runner.os }}-gradle-"
                     },
                     "name": "Cache",
-                    "uses": "actions/cache/restore@v3"
+                    "uses": "actions/cache/restore@v4"
                 },
                 {
                     "with": {
@@ -30,7 +34,7 @@
                         "gradle-home-cache-cleanup": true
                     },
                     "name": "Setup Gradle",
-                    "uses": "gradle/gradle-build-action@v2"
+                    "uses": "gradle/actions/setup-gradle@v3"
                 },
                 {
                     "name": "Build",
@@ -54,7 +58,7 @@
                         "path": "build/repo"
                     },
                     "name": "Archive Publishable Artifacts",
-                    "uses": "actions/upload-artifact@v3"
+                    "uses": "actions/upload-artifact@v4"
                 }
             ]
         }

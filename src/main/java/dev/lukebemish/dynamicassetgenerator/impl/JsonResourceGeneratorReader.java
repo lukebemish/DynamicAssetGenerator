@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class JsonResourceGeneratorReader implements PathAwareInputStreamSource, Resettable {
-    private volatile Map<ResourceLocation, ResourceGenerator> map = null;
+    private volatile @Nullable Map<ResourceLocation, ResourceGenerator> map = null;
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
     private final Function<ResourceGenerationContext, Map<ResourceLocation, ResourceGenerator>> mapSupplier;
@@ -48,11 +48,11 @@ public class JsonResourceGeneratorReader implements PathAwareInputStreamSource, 
     @Nullable
     static ResourceGenerator fromJson(String json) {
         JsonObject jsonObject = GSON.fromJson(json, JsonObject.class);
-        return ResourceGenerator.CODEC.parse(JsonOps.INSTANCE, jsonObject).getOrThrow(false, s->{});
+        return ResourceGenerator.CODEC.parse(JsonOps.INSTANCE, jsonObject).getOrThrow();
     }
 
     @Override
-    public IoSupplier<InputStream> get(ResourceLocation outRl, ResourceGenerationContext context) {
+    public @Nullable IoSupplier<InputStream> get(ResourceLocation outRl, ResourceGenerationContext context) {
         setupMap(context);
         ResourceGenerator json = map.get(outRl);
         if (json!=null)

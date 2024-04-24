@@ -1,30 +1,39 @@
 package dev.lukebemish.dynamicassetgenerator.impl;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
 
 public class CacheReference<T> {
-    T held = null;
+    @Nullable T held = null;
 
-    public T calcSync(Function<T, T> transformer) {
+    public T calcSync(ReferenceCalculator<T> transformer) {
         synchronized (this) {
-            return transformer.apply(held);
+            return transformer.calc(held);
         }
     }
 
-    public void doSync(Consumer<T> consumer) {
+    public void doSync(ReferenceConsumer<T> consumer) {
         synchronized (this) {
             consumer.accept(held);
         }
     }
 
-    public T getHeld() {
+    public @Nullable T getHeld() {
         return held;
     }
 
-    public void setHeld(T held) {
+    public void setHeld(@Nullable T held) {
         synchronized (this) {
             this.held = held;
         }
+    }
+
+    @FunctionalInterface
+    public interface ReferenceCalculator<T> {
+        T calc(@Nullable T held);
+    }
+
+    @FunctionalInterface
+    public interface ReferenceConsumer<T> {
+        void accept(@Nullable T held);
     }
 }

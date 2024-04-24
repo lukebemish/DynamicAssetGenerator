@@ -6,7 +6,9 @@ import dev.lukebemish.dynamicassetgenerator.impl.fabriquilt.fabric.FabricPlatfor
 import dev.lukebemish.dynamicassetgenerator.impl.fabriquilt.quilt.QuiltPlatformMinimal;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackCompatibility;
@@ -16,6 +18,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface FabriQuiltShared {
@@ -39,21 +42,18 @@ public interface FabriQuiltShared {
             DynamicAssetGenerator.CACHES.forEach(((location, info) -> {
                 if (info.cache().getPackType() == type) {
                     var metadata = DynamicAssetGenerator.makeMetadata(info.cache());
-                    var packInfo = new Pack.Info(
+                    var packMetadata = new Pack.Metadata(
                         metadata.description(),
                         PackCompatibility.COMPATIBLE,
                         FeatureFlagSet.of(),
                         List.of()
                     );
-                    Pack pack = Pack.create(
-                        DynamicAssetGenerator.MOD_ID+'/'+ info.cache().getName(),
-                        Component.literal(DynamicAssetGenerator.MOD_ID+'/'+ info.cache().getName()),
-                        true,
+                    var id = DynamicAssetGenerator.MOD_ID+'/'+ info.cache().getName();
+                    Pack pack = new Pack(
+                        new PackLocationInfo(id, Component.literal(id), PackSource.DEFAULT, Optional.empty()),
                         new GeneratedPackResources.GeneratedResourcesSupplier(info.cache()),
-                        packInfo,
-                        info.position(),
-                        true,
-                        PackSource.DEFAULT
+                        packMetadata,
+                        new PackSelectionConfig(true, info.position(), true)
                     );
                     consumer.accept(pack);
                 }

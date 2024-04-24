@@ -3,10 +3,13 @@ package dev.lukebemish.dynamicassetgenerator.impl.util;
 import dev.lukebemish.dynamicassetgenerator.api.compat.ConditionalInvisibleResourceProvider;
 import dev.lukebemish.dynamicassetgenerator.api.compat.InvisibleResourceProvider;
 import dev.lukebemish.dynamicassetgenerator.impl.DynamicAssetGenerator;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.IoSupplier;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -14,6 +17,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -65,10 +69,17 @@ public final class InvisibleProviderUtils {
             }
 
             @Override
-            public @NonNull String packId() {
-                return "placeholder__"+provider.getClass().getName().toLowerCase(Locale.ROOT)
-                        .replace('.', '_')
-                        .replace('$', '_');
+            public PackLocationInfo location() {
+                var codePoints = provider.getClass().getName()
+                    .toLowerCase(Locale.ROOT)
+                    .codePoints().map(i -> Character.isJavaIdentifierPart(i) ? i : '_')
+                    .toArray();
+                return new PackLocationInfo(
+                    "__placeholder/"+new String(codePoints, 0, codePoints.length),
+                    Component.empty(),
+                    PackSource.DEFAULT,
+                    Optional.empty()
+                );
             }
 
             @Override
