@@ -4,30 +4,26 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
-
-        maven {
-            name = 'Quilt (Release)'
-            url = 'https://maven.quiltmc.org/repository/release'
-        }
-
         maven {
             name = 'NeoForged'
             url = 'https://maven.neoforged.net/'
         }
-
         maven {
             name = "Luke's Maven"
-            url = 'https://maven.lukebemish.dev/releases'
+            url = 'https://maven.lukebemish.dev/releases/'
         }
-
         maven {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org'
         }
-
         maven {
             name = 'Architectury'
             url "https://maven.architectury.dev/"
+        }
+
+        maven {
+            name = "Luke's Maven"
+            url = 'https://maven.lukebemish.dev/snapshots/'
         }
 
         mavenCentral()
@@ -36,8 +32,54 @@ pluginManagement {
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.6.0'
+    id 'dev.lukebemish.conventions' version '0.1.9'
+    id 'dev.lukebemish.multisource' version '0.1.1-SNAPSHOT'
 }
 
 rootProject.name = 'dynamicassetgenerator'
-include("common", "neoforge", "fabriquilt")
+
+multisource.of(':') {
+    common('main', []) {
+        minecraft.add project.libs.minecraft
+        mappings.add loom.layered() {
+            officialMojangMappings()
+            parchment(project.dependencies.variantOf(project.libs.parchment) {
+                artifactType('zip')
+            })
+        }
+    }
+    fabric('fabric', ['main']) {
+        minecraft.add project.libs.minecraft
+        mappings.add loom.layered() {
+            officialMojangMappings()
+            parchment(project.dependencies.variantOf(project.libs.parchment) {
+                artifactType('zip')
+            })
+        }
+        loader.add project.libs.fabric.loader
+    }
+    neoforge('neoforge', ['main']) {
+        minecraft.add project.libs.minecraft
+        mappings.add loom.layered() {
+            officialMojangMappings()
+            parchment(project.dependencies.variantOf(project.libs.parchment) {
+                artifactType('zip')
+            })
+        }
+        neoForge.add project.libs.neoforge
+    }
+    repositories {
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
+        maven {
+            url = 'https://maven.wispforest.io'
+            content {
+                includeModule('io.wispforest', 'owo-lib')
+            }
+        }
+    }
+}
+
+//include("common", "neoforge", "fabriquilt")

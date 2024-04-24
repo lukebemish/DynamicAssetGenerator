@@ -1,8 +1,11 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 plugins {
-    alias libs.plugins.quilt.licenser apply false
-    alias libs.plugins.mdg.plugin
+    id 'maven-publish'
+    id 'signing'
+    id 'java-library'
     alias libs.plugins.managedversioning
-    alias libs.plugins.architectury.loom apply false
 }
 
 managedVersioning {
@@ -18,6 +21,7 @@ managedVersioning {
             onBranches.add '1.*'
             gradleJob {
                 name.set 'build'
+                javaVersion.set '21'
                 gradlew 'Build', 'checkLicenses', 'build'
                 gradlew 'Publish', 'publish'
                 mavenSnapshot('github')
@@ -28,15 +32,54 @@ managedVersioning {
             workflowDispatch.set(true)
             gradleJob {
                 name.set 'build'
+                javaVersion.set '21'
+                buildCache()
                 step {
                     setupGitUser()
                 }
                 readOnly.set false
                 gradlew 'Tag Release', 'tagRelease'
-                gradlew 'Build', 'checkLicenses', 'build', 'prepareJavadoc'
+                gradlew 'Build', 'build'
                 step {
                     run.set 'git push && git push --tags'
                 }
+                recordVersion 'Record Version', 'version'
+                sign()
+                mavenCentral()
+                modPublishing()
+            }
+            gradleJob {
+                name.set 'publishCentral'
+                javaVersion.set '21'
+                buildCache()
+                name.set 'publish'
+                needs.add('build')
+                tag.set('${{needs.build.outputs.version}}')
+                gradlew 'Publish', 'publish', 'closeAndReleaseSonatypeStagingRepository'
+                sign()
+                mavenCentral()
+                modPublishing()
+            }
+            gradleJob {
+                name.set 'publishMod'
+                javaVersion.set '21'
+                buildCache()
+                name.set 'publish'
+                needs.add('build')
+                tag.set('${{needs.build.outputs.version}}')
+                gradlew 'Publish', 'modrinth', 'curseforge'
+                sign()
+                mavenCentral()
+                modPublishing()
+            }
+            gradleJob {
+                name.set 'publishJavadoc'
+                javaVersion.set '21'
+                buildCache()
+                name.set 'publish'
+                needs.add('build')
+                tag.set('${{needs.build.outputs.version}}')
+                gradlew 'Build', 'prepareJavadoc'
                 step {
                     name.set 'Upload Javadoc'
                     uses.set 'andreiio/rclone-action@v1.2.0'
@@ -49,8 +92,8 @@ managedVersioning {
                     env['RCLONE_CONFIG_R2_REGION'] = 'auto'
                     env['RCLONE_CONFIG_R2_ACL'] = 'private'
                 }
-                gradlew 'Publish', 'publish', 'modrinth', 'curseforge'
-                mavenRelease('github')
+                sign()
+                mavenCentral()
                 modPublishing()
             }
         }
@@ -59,6 +102,7 @@ managedVersioning {
             pullRequest.set(true)
             gradleJob {
                 name.set 'build'
+                javaVersion.set '21'
                 gradlew 'Build', 'checkLicenses', 'build'
                 gradlew 'Publish', 'publish'
                 pullRequestArtifact()
@@ -79,64 +123,122 @@ managedVersioning.apply()
 
 println "Building: $version"
 
-configurations {
-    license {
-        canBeResolved = false
-        canBeConsumed = true
+dependencies {
+    compileOnly cLibs.bundles.compileonly
+    annotationProcessor cLibs.bundles.annotationprocessor
+    compileOnly libs.fabric.mixin
+
+    fabricCompileOnly cLibs.bundles.compileonly
+    fabricAnnotationProcessor cLibs.bundles.annotationprocessor
+    modFabricImplementation libs.fabric.loader
+    modFabricImplementation libs.fabric.api
+    modFabricCompileOnly libs.owolib
+
+    neoforgeCompileOnly cLibs.bundles.compileonly
+    neoforgeAnnotationProcessor cLibs.bundles.annotationprocessor
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+    registerFeature("neoforge") {
+        usingSourceSet sourceSets.neoforge
+        capability(project.group as String, project.name, project.version as String)
+        capability(project.group as String, "$project.name-neoforge", project.version as String)
+        withSourcesJar()
+        withJavadocJar()
+    }
+    registerFeature("fabric") {
+        usingSourceSet sourceSets.fabric
+        capability(project.group as String, project.name, project.version as String)
+        capability(project.group as String, "$project.name-fabric", project.version as String)
+        withSourcesJar()
+        withJavadocJar()
     }
 }
 
-artifacts {
-    add 'license', file("LICENSE")
-}
+managedVersioning.publishing.mavenCentral()
+managedVersioning.publishing.mavenPullRequest(publishing)
+managedVersioning.publishing.mavenSnapshot(publishing)
 
-modsDotGroovy {
-    dslVersion = libs.versions.mdg.dsl.get()
-    platform 'multiloader'
-    multiloader {
-        forge = [project(':neoforge')]
-        fabric = [project(':fabriquilt')]
-        quilt = []
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            managedVersioning.publishing.sign(project.signing, it)
+        }
     }
 }
 
-subprojects { p ->
-    apply plugin: 'maven-publish'
-    apply plugin: 'java-library'
-    apply plugin: libs.plugins.quilt.licenser.get().pluginId
-
-    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-    java.withSourcesJar()
-    java.withJavadocJar()
-
-    license {
-        rule rootProject.file('header.txt')
-        exclude '**/*.mcmeta'
-        exclude '**/package-info.java'
+['javadoc', 'fabricJavadoc', 'neoforgeJavadoc'].each {
+    tasks.named(it, Javadoc) {
+        include "**/api/**"
     }
+}
 
-    jar {
+['sourcesJar', 'fabricSourcesJar', 'neoforgeSourcesJar'].each {
+    tasks.named(it, Jar) {
+        from(files("LICENSE")) {
+            rename { "${it}_${project.name}" }
+        }
+    }
+}
+
+['jar', 'fabricJar', 'neoforgeJar'].each {
+    tasks.named(it, Jar) {
+        from(files("LICENSE")) {
+            rename { "${it}_${project.name}" }
+        }
+
         manifest {
             attributes([
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_author,
+                'Specification-Version'   : project.version,
+                'Implementation-Title'    : "$mod_name - ${project.name}",
+                'Implementation-Version'  : project.version,
+                'Implementation-Vendor'   : mod_author,
+                'Built-On-Minecraft'      : libs.versions.minecraft.get(),
                 'Implementation-Commit-Time': managedVersioning.timestamp.get(),
                 'Implementation-Commit': managedVersioning.hash.get()
             ])
         }
     }
-
-    managedVersioning.publishing.mavenPullRequest(publishing)
-    managedVersioning.publishing.mavenSnapshot(publishing)
-    managedVersioning.publishing.mavenRelease(publishing)
 }
 
-javadoc {
-    source subprojects.collect { it.sourceSets.main.allJava }
-    classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+processNeoforgeResources {
+    doLast {
+        fileTree(dir: outputs.files.asPath, include: "mixin.*.json").each { File file ->
+            def obj = new JsonSlurper().parse(file)
+            if (obj['refmap']) {
+                obj.remove('refmap')
+            }
+            file.text = JsonOutput.toJson(obj)
+        }
+    }
+}
+
+tasks.register('combinedJavadoc', Javadoc) {
+    source sourceSets.main.allJava
+    source sourceSets.fabric.allJava
+    source sourceSets.neoforge.allJava
+    def files = files()
+    [configurations.compileClasspath, configurations.fabricCompileClasspath, configurations.neoforgeCompileClasspath].each {
+        files.from it
+        dependsOn it
+    }
+    classpath = files
     include "**/api/**"
 }
 
 tasks.register('prepareJavadoc', Copy) {
-    dependsOn tasks.javadoc
-    from tasks.javadoc.outputs
-    into layout.buildDirectory.dir("prepareJavadoc/${project.group.replace('.','/')}/${project.version.split(/\./)[0]}")
+    dependsOn tasks.combinedJavadoc
+    from tasks.combinedJavadoc.outputs
+    into layout.buildDirectory.dir("prepareJavadoc/${(project.group as String).replace('.','/')}/${(project.version as String).split(/\./)[0]}")
+}
+
+tasks.named('assemble') {
+    dependsOn tasks.prepareJavadoc
 }

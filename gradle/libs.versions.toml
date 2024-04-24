@@ -1,28 +1,22 @@
 [versions]
-minecraft = "1.20.4"
-parchment_minecraft = "1.20.2"
-parchment_mappings = "2023.12.10"
+minecraft = "1.20.5"
+parchment = "2024.04.14"
 
-neoforge = "20.4.48-beta"
+neoforge = "20.5.0-beta"
 
-fabric_loader = "0.15.3"
-fabric_api = "0.92.0+1.20.4"
+fabric_loader = "0.15.10"
+fabric_api = "0.97.6+1.20.5"
+
+fabric_mixin = "0.13.3+mixin.0.8.5"
 
 mdg_plugin = "1.4.3"
 mdg_dsl = "1.5.1"
-autoservice = "1.1.1"
-
-architectury_loom = "1.4.373"
-quilt_licenser = "2.0.1"
-
-jetbrains_annotations = "24.1.0"
-jspecify = "0.3.0"
 
 minotaur = "2.8.7"
 
 owolib = "0.11.4+1.20.2"
 
-managedversioning = "1.2.4"
+managedversioning = "1.2.17"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -32,10 +26,9 @@ fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fab
 
 neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
 
-jetbrains_annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains_annotations" }
-jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
+parchment = { module = "org.parchmentmc.data:parchment-1.20.4", version.ref = "parchment" }
 
-autoservice = { module = "com.google.auto.service:auto-service", version.ref = "autoservice" }
+fabric_mixin = { module = "net.fabricmc:sponge-mixin", version.ref = "fabric_mixin" }
 
 owolib = { module = "io.wispforest:owo-lib", version.ref = "owolib" }
 
@@ -43,7 +36,5 @@ owolib = { module = "io.wispforest:owo-lib", version.ref = "owolib" }
 
 managedversioning = { id = "dev.lukebemish.managedversioning", version.ref = "managedversioning" }
 mdg_plugin = { id = "org.groovymc.modsdotgroovy", version.ref = "mdg_plugin" }
-architectury_loom = { id = "dev.architectury.loom", version.ref = "architectury_loom" }
-quilt_licenser = { id = "org.quiltmc.gradle.licenser", version.ref = "quilt_licenser" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
 curseforgegradle = {id = "net.darkhax.curseforgegradle", version = "1.1.18"}
