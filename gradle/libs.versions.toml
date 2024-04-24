@@ -9,8 +9,7 @@ fabric_api = "0.97.6+1.20.5"
 
 fabric_mixin = "0.13.3+mixin.0.8.5"
 
-mdg_plugin = "1.4.3"
-mdg_dsl = "1.5.1"
+modsdotgroovy = "2.0.0-beta.22"
 
 minotaur = "2.8.7"
 
@@ -35,6 +34,6 @@ owolib = { module = "io.wispforest:owo-lib", version.ref = "owolib" }
 [plugins]
 
 managedversioning = { id = "dev.lukebemish.managedversioning", version.ref = "managedversioning" }
-mdg_plugin = { id = "org.groovymc.modsdotgroovy", version.ref = "mdg_plugin" }
+modsdotgroovy = { id = "org.groovymc.modsdotgroovy", version.ref = "modsdotgroovy" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
 curseforgegradle = {id = "net.darkhax.curseforgegradle", version = "1.1.18"}

@@ -21,10 +21,8 @@ pluginManagement {
             url "https://maven.architectury.dev/"
         }
 
-        maven {
-            name = "Luke's Maven"
-            url = 'https://maven.lukebemish.dev/snapshots/'
-        }
+        // TODO: remove
+        mavenLocal()
 
         mavenCentral()
         gradlePluginPortal()
@@ -33,13 +31,13 @@ pluginManagement {
 
 plugins {
     id 'dev.lukebemish.conventions' version '0.1.9'
-    id 'dev.lukebemish.multisource' version '0.1.1-SNAPSHOT'
+    id 'dev.lukebemish.multisource' version '0.1.2-dirty'
 }
 
 rootProject.name = 'dynamicassetgenerator'
 
 multisource.of(':') {
-    common('main', []) {
+    configureEach {
         minecraft.add project.libs.minecraft
         mappings.add loom.layered() {
             officialMojangMappings()
@@ -48,24 +46,11 @@ multisource.of(':') {
             })
         }
     }
+    common('main', []) {}
     fabric('fabric', ['main']) {
-        minecraft.add project.libs.minecraft
-        mappings.add loom.layered() {
-            officialMojangMappings()
-            parchment(project.dependencies.variantOf(project.libs.parchment) {
-                artifactType('zip')
-            })
-        }
         loader.add project.libs.fabric.loader
     }
     neoforge('neoforge', ['main']) {
-        minecraft.add project.libs.minecraft
-        mappings.add loom.layered() {
-            officialMojangMappings()
-            parchment(project.dependencies.variantOf(project.libs.parchment) {
-                artifactType('zip')
-            })
-        }
         neoForge.add project.libs.neoforge
     }
     repositories {

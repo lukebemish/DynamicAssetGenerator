@@ -6,6 +6,7 @@ plugins {
     id 'signing'
     id 'java-library'
     alias libs.plugins.managedversioning
+    alias libs.plugins.modsdotgroovy
 }
 
 managedVersioning {
@@ -122,6 +123,39 @@ managedVersioning {
 managedVersioning.apply()
 
 println "Building: $version"
+
+modsDotGroovy {
+    multiplatform.expose()
+    gather {
+        projectProperty('mod_id')
+        projectProperty('mod_name')
+        projectProperty('description')
+    }
+}
+
+import org.groovymc.modsdotgroovy.core.Platform
+
+sourceSets.neoforge.modsDotGroovy {
+    platform = Platform.NEOFORGE
+    inferGather.set false
+    multiplatform.from(':', 'main')
+    gather {
+        minecraftVersion = libs.versions.minecraft.get()
+        platformVersion = libs.versions.neoforge.get()
+    }
+    enable()
+}
+
+sourceSets.fabric.modsDotGroovy {
+    platform = Platform.FABRIC
+    inferGather.set false
+    multiplatform.from(':', 'main')
+    gather {
+        minecraftVersion = libs.versions.minecraft.get()
+        platformVersion = libs.versions.fabric.loader.get()
+    }
+    enable()
+}
 
 dependencies {
     compileOnly cLibs.bundles.compileonly
