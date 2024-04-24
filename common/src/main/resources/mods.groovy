@@ -1,14 +1,4 @@
-/*
- * Copyright (C) 2023 Luke Bemish and contributors
- * SPDX-License-Identifier: LGPL-3.0-or-later
- */
-
 import modsdotgroovy.Dependency
-
-/*
- * Copyright (C) 2022-2023 Luke Bemish and contributors
- * SPDX-License-Identifier: LGPL-3.0-or-later
- */
 
 ModsDotGroovy.make {
     modLoader = 'javafml'
@@ -46,19 +36,19 @@ ModsDotGroovy.make {
             }
         }
 
-        onForge {
-            dependencies = dependencies.collect { dep ->
-                new Dependency() {
-                    @Override
-                    Map asForgeMap() {
-                        def map = dep.asForgeMap()
-                        map.remove('mandatory')
-                        map.put('type', this.mandatory ? 'required' : 'optional')
-                        return map
+            onForge {
+                dependencies = dependencies.collect { dep ->
+                    new Dependency() {
+                        @Override
+                        Map asForgeMap() {
+                            def map = dep.asForgeMap()
+                            map.remove('mandatory')
+                            map.put('type', this.mandatory ? 'required' : 'optional')
+                            return map
+                        }
                     }
                 }
             }
-        }
 
         entrypoints {
             onFabric {
