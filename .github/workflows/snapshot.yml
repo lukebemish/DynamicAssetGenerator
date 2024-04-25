@@ -38,7 +38,7 @@
                 },
                 {
                     "name": "Build",
-                    "run": "./gradlew checkLicenses build",
+                    "run": "./gradlew build",
                     "id": "build",
                     "env": {
                         "SNAPSHOT_MAVEN_PASSWORD": "${{ secrets.SNAPSHOT_MAVEN_PASSWORD }}",

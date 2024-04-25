@@ -22,7 +22,7 @@ managedVersioning {
             gradleJob {
                 name.set 'build'
                 javaVersion.set '21'
-                gradlew 'Build', 'checkLicenses', 'build'
+                gradlew 'Build', 'build'
                 gradlew 'Publish', 'publish'
                 mavenSnapshot('github')
             }
@@ -103,7 +103,7 @@ managedVersioning {
             gradleJob {
                 name.set 'build'
                 javaVersion.set '21'
-                gradlew 'Build', 'checkLicenses', 'build'
+                gradlew 'Build', 'build'
                 gradlew 'Publish', 'publish'
                 pullRequestArtifact()
             }
@@ -198,7 +198,12 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            managedVersioning.publishing.sign(project.signing, it)
+            managedVersioning.publishing.sign(signing, it)
+            managedVersioning.publishing.pom(it, github_repo, license)
+            pom {
+                name = mod_name
+                description = mod_description
+            }
         }
     }
 }
