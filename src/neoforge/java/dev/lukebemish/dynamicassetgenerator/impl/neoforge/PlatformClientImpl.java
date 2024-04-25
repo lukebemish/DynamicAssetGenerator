@@ -29,7 +29,7 @@ public class PlatformClientImpl implements PlatformClient {
         if (SPRITE_SOURCES_REGISTERED) return;
         SPRITE_SOURCES_REGISTERED = true;
         for (var pair : SPRITE_SOURCE_QUEUE) {
-            SpriteSourcesAccessor.dynamicassetgenerator$invokeRegister(pair.getFirst().toString(), pair.getSecond());
+            SpriteSourcesAccessor.dynamic_asset_generator$invokeRegister(pair.getFirst().toString(), pair.getSecond());
         }
     }
 }

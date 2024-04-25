@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 
 @Mixin(BuiltInPackSource.class)
 public class ClientBuiltInPackSourceMixin {
-    @Inject(method = "listBundledPacks", at = @At("RETURN"))
+    @Inject(method = "listBundledPacks(Ljava/util/function/Consumer;)V", at = @At("RETURN"))
     private void addAdditionalPacks(Consumer<Pack> profileAdder, CallbackInfo ci) {
         //noinspection ConstantValue
         if (((Object) this) instanceof ClientPackSource) {

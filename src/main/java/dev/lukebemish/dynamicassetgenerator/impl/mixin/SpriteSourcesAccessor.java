@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface SpriteSourcesAccessor {
     @SuppressWarnings("UnusedReturnValue")
     @Invoker("register")
-    static SpriteSourceType dynamicassetgenerator$invokeRegister(String pName, MapCodec<? extends SpriteSource> mapCodec) {
+    static SpriteSourceType dynamic_asset_generator$invokeRegister(String pName, MapCodec<? extends SpriteSource> mapCodec) {
         throw new AssertionError("Mixin failed to apply");
     }
 
     @Accessor("TYPES")
-    static BiMap<ResourceLocation, SpriteSourceType> dynamicassetgenerator$getTypes() {
+    static BiMap<ResourceLocation, SpriteSourceType> dynamic_asset_generator$getTypes() {
         throw new AssertionError("Mixin failed to apply");
     }
 }

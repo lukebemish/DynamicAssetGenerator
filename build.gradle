@@ -1,5 +1,4 @@
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
+import org.groovymc.modsdotgroovy.core.Platform
 
 plugins {
     id 'maven-publish'
@@ -133,8 +132,6 @@ modsDotGroovy {
     }
 }
 
-import org.groovymc.modsdotgroovy.core.Platform
-
 sourceSets.neoforge.modsDotGroovy {
     platform = Platform.NEOFORGE
     inferGather.set false
@@ -238,18 +235,6 @@ publishing {
                 'Implementation-Commit-Time': managedVersioning.timestamp.get(),
                 'Implementation-Commit': managedVersioning.hash.get()
             ])
-        }
-    }
-}
-
-processNeoforgeResources {
-    doLast {
-        fileTree(dir: outputs.files.asPath, include: "mixin.*.json").each { File file ->
-            def obj = new JsonSlurper().parse(file)
-            if (obj['refmap']) {
-                obj.remove('refmap')
-            }
-            file.text = JsonOutput.toJson(obj)
         }
     }
 }

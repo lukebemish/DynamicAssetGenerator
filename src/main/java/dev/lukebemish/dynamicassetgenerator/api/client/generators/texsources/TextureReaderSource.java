@@ -11,6 +11,7 @@ import dev.lukebemish.dynamicassetgenerator.api.client.generators.TexSourceDataH
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.IoSupplier;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -45,7 +46,9 @@ public final class TextureReaderSource implements TexSource {
                 }
                 data.getLogger().error("Texture not available in context: {}", this.getPath());
             } catch (IOException e) {
-                data.getLogger().error("Issue loading texture: {}", this.getPath());
+                var message = "Issue loading texture: " + this.getPath();
+                data.getLogger().error(message);
+                throw new IOException(message, e);
             }
             throw new IOException("Issue loading texture: " + this.getPath());
         };
@@ -72,7 +75,7 @@ public final class TextureReaderSource implements TexSource {
     }
 
     public static class Builder {
-        private ResourceLocation path;
+        private @Nullable ResourceLocation path;
 
         /**
          * Sets the path to the texture to read, excluding the {@code "textures/"} prefix and {@code ".png"} file

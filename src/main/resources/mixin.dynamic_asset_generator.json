@@ -16,6 +16,5 @@
   "server": [],
   "injectors": {
     "defaultRequire": 1
-  },
-  "refmap": "dynamic_asset_generator.refmap.json"
+  }
 }

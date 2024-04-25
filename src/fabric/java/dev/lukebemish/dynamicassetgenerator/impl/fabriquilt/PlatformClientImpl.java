@@ -11,6 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 public class PlatformClientImpl implements PlatformClient {
     @Override
     public void addSpriteSource(ResourceLocation location, MapCodec<? extends SpriteSource> codec) {
-        SpriteSourcesAccessor.dynamicassetgenerator$invokeRegister(location.toString(), codec);
+        SpriteSourcesAccessor.dynamic_asset_generator$invokeRegister(location.toString(), codec);
     }
 }

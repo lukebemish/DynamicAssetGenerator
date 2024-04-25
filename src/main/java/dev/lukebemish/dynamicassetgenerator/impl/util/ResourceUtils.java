@@ -7,6 +7,7 @@ import dev.lukebemish.dynamicassetgenerator.impl.Timing;
 import dev.lukebemish.dynamicassetgenerator.impl.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.IoSupplier;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +20,7 @@ import java.util.function.BiFunction;
 public final class ResourceUtils {
     private ResourceUtils() {}
 
-    public static IoSupplier<InputStream> wrapSafeData(ResourceLocation rl, PathAwareInputStreamSource source, ResourceGenerationContext context) {
+    public static @Nullable IoSupplier<InputStream> wrapSafeData(ResourceLocation rl, PathAwareInputStreamSource source, ResourceGenerationContext context) {
         return wrapSafeData(
             rl,
             source::get,
@@ -30,13 +31,13 @@ public final class ResourceUtils {
         );
     }
 
-    public static <T extends AutoCloseable> IoSupplier<T> wrapSafeData(
+    public static <T extends AutoCloseable> @Nullable IoSupplier<T> wrapSafeData(
         ResourceLocation rl,
-        BiFunction<ResourceLocation, ResourceGenerationContext, IoSupplier<T>> source,
+        BiFunction<ResourceLocation, ResourceGenerationContext, @Nullable IoSupplier<T>> source,
         ResourceGenerationContext context,
         IoFunction<T, InputStream> writer,
         IoFunction<InputStream, T> opener,
-        BiFunction<ResourceLocation, ResourceGenerationContext, String> cacheKeyMaker
+        BiFunction<ResourceLocation, ResourceGenerationContext, @Nullable String> cacheKeyMaker
     ) {
         IoSupplier<T> supplier = null;
         Transformer<T> transformer = is -> is;

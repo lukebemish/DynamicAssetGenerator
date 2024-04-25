@@ -51,7 +51,7 @@ public abstract class ResourceCache {
             return true;
         }
         String remainder = packId.substring(prefix.length());
-        @Nullable ResourceLocation targetName = ResourceLocation.read(remainder).result().orElse(null);
+        ResourceLocation targetName = ResourceLocation.read(remainder).result().orElse(null);
         return targetName == null || getDependencies().contains(targetName);
     }
 
@@ -94,14 +94,22 @@ public abstract class ResourceCache {
                 if (DynamicAssetGenerator.TIME_RESOURCES) {
                     rls.forEach(rl -> {
                         long startTime = System.nanoTime();
-                        outputs.put(rl, ResourceUtils.wrapSafeData(rl, source, makeContext(false)));
+                        var supplier = ResourceUtils.wrapSafeData(rl, source, makeContext(false));
+                        if (supplier != null) {
+                            outputs.put(rl, supplier);
+                        }
                         long endTime = System.nanoTime();
 
                         long duration = (endTime - startTime)/1000;
                         Timing.recordPartialTime(this.getName().toString(), rl, duration);
                     });
                 } else {
-                    rls.forEach(rl -> outputs.put(rl, ResourceUtils.wrapSafeData(rl, source, makeContext(false))));
+                    rls.forEach(rl -> {
+                        var supplier = ResourceUtils.wrapSafeData(rl, source, makeContext(false));
+                        if (supplier != null) {
+                            outputs.put(rl, supplier);
+                        }
+                    });
                 }
             } catch (Throwable e) {
                 DynamicAssetGenerator.LOGGER.error("Issue setting up PathAwareInputStreamSource:",e);
@@ -111,7 +119,7 @@ public abstract class ResourceCache {
         return outputs;
     }
 
-    private ResourceGenerationContext.ResourceSource filteredSource = null;
+    private ResourceGenerationContext.@Nullable ResourceSource filteredSource = null;
 
     /**
      * Creates a context for generating resources within this cache.

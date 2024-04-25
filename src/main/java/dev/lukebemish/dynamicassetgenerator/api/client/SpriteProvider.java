@@ -231,7 +231,7 @@ public interface SpriteProvider<T extends SpriteProvider<T>> {
 
         @Override
         public @NonNull SpriteSourceType type() {
-            return SpriteSourcesAccessor.dynamicassetgenerator$getTypes().get(source.getLocation());
+            return SpriteSourcesAccessor.dynamic_asset_generator$getTypes().get(source.getLocation());
         }
 
         public T unwrap() {
