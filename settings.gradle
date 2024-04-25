@@ -28,7 +28,7 @@ pluginManagement {
 
 plugins {
     id 'dev.lukebemish.conventions' version '0.1.9'
-    id 'dev.lukebemish.multisource' version '0.1.5'
+    id 'dev.lukebemish.multisource' version '0.1.6'
 }
 
 rootProject.name = 'dynamicassetgenerator'
@@ -44,9 +44,7 @@ multisource.of(':') {
         }
     }
     common('main', []) {}
-    fabric('fabric', ['main']) {
-        loader.add project.libs.fabric.loader
-    }
+    fabric('fabric', ['main']) {}
     neoforge('neoforge', ['main']) {
         neoForge.add project.libs.neoforge
     }

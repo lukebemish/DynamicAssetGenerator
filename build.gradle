@@ -1,3 +1,4 @@
+import me.modmuss50.mpp.ReleaseType
 import org.groovymc.modsdotgroovy.core.Platform
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     id 'java-library'
     alias libs.plugins.managedversioning
     alias libs.plugins.modsdotgroovy
+    alias libs.plugins.modpublish
 }
 
 managedVersioning {
@@ -257,4 +259,51 @@ tasks.register('combinedJavadoc', Javadoc) {
 
 tasks.named('assemble') {
     dependsOn tasks.combinedJavadoc
+}
+
+def releaseType = ReleaseType.values().find { it.name() == project.release_type.toUpperCase(Locale.ROOT) } ?: ReleaseType.STABLE
+
+publishMods {
+    changelog = ''
+    version = "${project.version}"
+    type = releaseType
+    dryRun = providers.environmentVariable("MODRINTH_KEY").getOrNull() == null || providers.environmentVariable("CURSEFORGE_KEY").getOrNull() == null
+
+    curseforge('curseforgeFabric') {
+        file = tasks.remapFabricJar.archiveFile
+        displayName = "${project.mod_name} [Fabric/Quilt] v${project.version}"
+        projectId = project.curseforge_id
+        accessToken = System.getenv('CURSEFORGE_KEY')
+        modLoaders = ['fabric', 'quilt']
+        minecraftVersions = [libs.versions.minecraft.get()]
+        requires('fabric-api')
+    }
+
+    curseforge('curseforgeNeoforge') {
+        file = tasks.remapNeoforgeJar.archiveFile
+        displayName = "${project.mod_name} [NeoForge] v${project.version}"
+        projectId = project.curseforge_id
+        accessToken = System.getenv('CURSEFORGE_KEY')
+        modLoaders = ['neoforge']
+        minecraftVersions = [libs.versions.minecraft.get()]
+    }
+
+    modrinth('modrinthFabric') {
+        file = tasks.remapFabricJar.archiveFile
+        displayName = "${project.mod_name} [Fabric/Quilt] v${project.version}"
+        projectId = project.modrinth_id
+        accessToken = System.getenv('MODRINTH_KEY')
+        minecraftVersions = [libs.versions.minecraft.get()]
+        modLoaders = ['fabric', 'quilt']
+        requires('fabric-api')
+    }
+
+    modrinth('modrinthNeoforge') {
+        file = tasks.remapNeoforgeJar.archiveFile
+        displayName = "${project.mod_name} [NeoForge] v${project.version}"
+        projectId = project.modrinth_id
+        accessToken = System.getenv('MODRINTH_KEY')
+        minecraftVersions = [libs.versions.minecraft.get()]
+        modLoaders = ['neoforge']
+    }
 }
