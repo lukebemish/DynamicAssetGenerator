@@ -202,7 +202,7 @@ publishing {
             managedVersioning.publishing.pom(it, github_repo, license)
             pom {
                 name = mod_name
-                description = mod_description
+                description = project.description
             }
         }
     }

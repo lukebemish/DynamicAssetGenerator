@@ -63,5 +63,3 @@ multisource.of(':') {
         }
     }
 }
-
-//include("common", "neoforge", "fabriquilt")
