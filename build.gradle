@@ -52,7 +52,6 @@ managedVersioning {
                 name.set 'publishCentral'
                 javaVersion.set '21'
                 buildCache()
-                name.set 'publish'
                 needs.add('build')
                 tag.set('${{needs.build.outputs.version}}')
                 gradlew 'Publish', 'publish', 'closeAndReleaseSonatypeStagingRepository'
@@ -64,7 +63,6 @@ managedVersioning {
                 name.set 'publishMod'
                 javaVersion.set '21'
                 buildCache()
-                name.set 'publish'
                 needs.add('build')
                 tag.set('${{needs.build.outputs.version}}')
                 gradlew 'Publish', 'modrinth', 'curseforge'
@@ -76,7 +74,6 @@ managedVersioning {
                 name.set 'publishJavadoc'
                 javaVersion.set '21'
                 buildCache()
-                name.set 'publish'
                 needs.add('build')
                 tag.set('${{needs.build.outputs.version}}')
                 gradlew 'Build', 'prepareJavadoc'
