@@ -3,4 +3,7 @@ loom {
         property 'dynamicassetgenerator.test', 'true'
         property 'dynamicassetgenerator.time_resources', 'true'
     }
+    mixin {
+        useLegacyMixinAp = false
+    }
 }
