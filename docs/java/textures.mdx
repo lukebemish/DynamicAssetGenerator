@@ -33,7 +33,7 @@ elements of the texture source, such as the logger, which can be retrieved with 
 making your source's output depend on other data in this element requires implementing the caching API, and that if your
 source reads existing resources, it should implement the cache key API.
 
-`codec` returns a codec that can be used to serialize or deserialize the texture source. This codec must be registered with
+`codec` returns a map codec that can be used to serialize or deserialize the texture source. This codec must be registered with
 `TexSource.register`, and is used when caching texture sources; a texture source's generated texture must be fully 
 describable by the information encoded by its codec, unless the experimental caching API is implemented for that texture 
 source.
