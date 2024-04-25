@@ -253,7 +253,7 @@ tasks.register('combinedJavadoc', Javadoc) {
         files.from it
         dependsOn it
     }
-    destinationDir = layout.buildDirectory.dir("prepareJavadoc/${(project.group as String).replace('.','/')}/${(project.version as String).split(/\./)[0]}").get().asFile
+    destinationDir = layout.buildDirectory.dir("prepareJavadoc/${(project.group as String).replace('.','/')}/${project.name}/${(project.version as String).split(/\./)[0]}").get().asFile
     classpath = files
     include "**/api/**"
 }
