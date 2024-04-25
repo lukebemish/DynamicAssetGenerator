@@ -76,7 +76,7 @@ managedVersioning {
                 buildCache()
                 needs.add('build')
                 tag.set('${{needs.build.outputs.version}}')
-                gradlew 'Build', 'prepareJavadoc'
+                gradlew 'Build', 'combinedJavadoc'
                 step {
                     name.set 'Upload Javadoc'
                     uses.set 'andreiio/rclone-action@v1.2.0'
