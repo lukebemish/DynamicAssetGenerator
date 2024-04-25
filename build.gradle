@@ -67,7 +67,7 @@ managedVersioning {
                 buildCache()
                 needs.add('build')
                 tag.set('${{needs.build.outputs.version}}')
-                gradlew 'Publish', 'modrinth', 'curseforge'
+                gradlew 'Publish', 'publishMods'
                 sign()
                 mavenCentral()
                 modPublishing()

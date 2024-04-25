@@ -275,7 +275,7 @@
                 },
                 {
                     "name": "Publish",
-                    "run": "./gradlew modrinth curseforge",
+                    "run": "./gradlew publishMods",
                     "id": "publish",
                     "env": {
                         "BUILD_CACHE_PASSWORD": "${{ secrets.BUILD_CACHE_PASSWORD }}",
