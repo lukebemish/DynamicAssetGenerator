@@ -253,16 +253,11 @@ tasks.register('combinedJavadoc', Javadoc) {
         files.from it
         dependsOn it
     }
+    destinationDir = layout.buildDirectory.dir("prepareJavadoc/${(project.group as String).replace('.','/')}/${(project.version as String).split(/\./)[0]}").get().asFile
     classpath = files
     include "**/api/**"
 }
 
-tasks.register('prepareJavadoc', Copy) {
-    dependsOn tasks.combinedJavadoc
-    from tasks.combinedJavadoc.outputs
-    into layout.buildDirectory.dir("prepareJavadoc/${(project.group as String).replace('.','/')}/${(project.version as String).split(/\./)[0]}")
-}
-
 tasks.named('assemble') {
-    dependsOn tasks.prepareJavadoc
+    dependsOn tasks.combinedJavadoc
 }
