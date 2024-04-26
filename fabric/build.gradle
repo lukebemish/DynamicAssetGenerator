@@ -7,9 +7,3 @@ loom {
         useLegacyMixinAp = false
     }
 }
-
-// TODO: loom is funky here...
-import net.fabricmc.loom.task.RemapJarTask
-tasks.withType(RemapJarTask).each {
-    it.addNestedDependencies.set false
-}

@@ -4,9 +4,3 @@ loom {
         property 'dynamicassetgenerator.time_resources', 'true'
     }
 }
-
-// TODO: loom is funky here...
-import net.fabricmc.loom.task.RemapJarTask
-tasks.withType(RemapJarTask).each {
-    it.addNestedDependencies.set false
-}
