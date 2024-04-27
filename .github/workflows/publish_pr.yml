@@ -34,7 +34,7 @@
                         "MAVEN_PASSWORD": "${{ secrets.PR_MAVEN_PASSWORD }}",
                         "MAVEN_URL": "https://maven.lukebemish.dev/pullrequests/",
                         "ALLOWED_VERSION": "*-pr${{ github.event.workflow_run.pull_requests[0].number }}",
-                        "ALLOWED_PATHS": "dev/lukebemish/dynamicassetgenerator/dynamicassetgenerator-*"
+                        "ALLOWED_PATHS": "dev/lukebemish/dynamicassetgenerator"
                     }
                 }
             ],
