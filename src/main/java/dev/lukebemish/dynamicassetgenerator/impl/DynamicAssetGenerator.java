@@ -49,7 +49,7 @@ public class DynamicAssetGenerator {
     public static final boolean TIME_RESOURCES = "true".equals(System.getProperty("dynamicassetgenerator.time_resources"))  || getConfig().timeResources();
 
     public static void init() {
-        ResourceGenerator.register(new ResourceLocation(MOD_ID,"dummy"), DummyGenerator.CODEC);
+        ResourceGenerator.register(ResourceLocation.fromNamespaceAndPath(MOD_ID,"dummy"), DummyGenerator.CODEC);
         if (TIME_RESOURCES) {
             LOGGER.info("Dynamic Asset Generator will time resource generation during this run!");
             try {
@@ -58,7 +58,7 @@ public class DynamicAssetGenerator {
                 LOGGER.error("Issue deleting times.log; you might be able to ignore this", e);
             }
         }
-        ResourceCache.register(new BuiltinDataResourceCache(new ResourceLocation(MOD_ID, "builtin_data")), Pack.Position.TOP);
+        ResourceCache.register(new BuiltinDataResourceCache(ResourceLocation.fromNamespaceAndPath(MOD_ID, "builtin_data")), Pack.Position.TOP);
     }
 
     public static Path cache(ResourceLocation cacheKey, boolean keyed) {

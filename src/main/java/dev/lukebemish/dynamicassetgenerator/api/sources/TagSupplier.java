@@ -96,13 +96,13 @@ public interface TagSupplier extends Function<ResourceGenerationContext, Map<Res
         }
 
         @Override
-        public IoSupplier<InputStream> get(ResourceLocation outRl, ResourceGenerationContext context) {
+        public @Nullable IoSupplier<InputStream> get(ResourceLocation outRl, ResourceGenerationContext context) {
             if (!outRl.getPath().startsWith("tags/") || !outRl.getPath().endsWith(".json")) {
                 return null;
             }
             return () -> {
                 checkTags(context);
-                ResourceLocation tagRl = new ResourceLocation(outRl.getNamespace(), outRl.getPath().substring(5, outRl.getPath().length() - 5));
+                ResourceLocation tagRl = ResourceLocation.fromNamespaceAndPath(outRl.getNamespace(), outRl.getPath().substring(5, outRl.getPath().length() - 5));
                 return build(bakedTags.get(tagRl));
             };
         }

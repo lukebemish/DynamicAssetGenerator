@@ -143,7 +143,7 @@ public interface SpriteProvider<T extends SpriteProvider<T>> {
             ResourceGenerationContext trackingContext = context.withResourceSource(trackingSource);
             var dataHolder = new TexSourceDataHolder();
             IoSupplier<NativeImage> imageSupplier = ResourceUtils.wrapSafeData(
-                new ResourceLocation(rl.getNamespace(), "textures/"+rl.getPath()+".png"),
+                ResourceLocation.fromNamespaceAndPath(rl.getNamespace(), "textures/"+rl.getPath()+".png"),
                 (r, c) -> texSource.getCachedSupplier(dataHolder, c),
                 trackingContext,
                 im -> {
@@ -173,7 +173,7 @@ public interface SpriteProvider<T extends SpriteProvider<T>> {
                         TextureMetaGenerator.AnimationGenerator generator = new TextureMetaGenerator.AnimationGenerator.Builder().build();
                         List<Pair<ResourceLocation, JsonObject>> animations = new ArrayList<>();
                         for (ResourceLocation touchedTexture : trackingSource.getTouchedTextures()) {
-                            var resource = context.getResourceSource().getResource(new ResourceLocation(touchedTexture.getNamespace(), "textures/"+touchedTexture.getPath()+".png.mcmeta"));
+                            var resource = context.getResourceSource().getResource(ResourceLocation.fromNamespaceAndPath(touchedTexture.getNamespace(), "textures/"+touchedTexture.getPath()+".png.mcmeta"));
                             if (resource == null) {
                                 animations.add(new Pair<>(touchedTexture, null));
                                 continue;

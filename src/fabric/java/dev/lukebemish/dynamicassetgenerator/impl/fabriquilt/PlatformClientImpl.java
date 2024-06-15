@@ -5,12 +5,13 @@ import com.mojang.serialization.MapCodec;
 import dev.lukebemish.dynamicassetgenerator.impl.client.platform.PlatformClient;
 import dev.lukebemish.dynamicassetgenerator.impl.mixin.SpriteSourcesAccessor;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.resources.ResourceLocation;
 
 @AutoService(PlatformClient.class)
 public class PlatformClientImpl implements PlatformClient {
     @Override
     public void addSpriteSource(ResourceLocation location, MapCodec<? extends SpriteSource> codec) {
-        SpriteSourcesAccessor.dynamic_asset_generator$invokeRegister(location.toString(), codec);
+        SpriteSourcesAccessor.dynamic_asset_generator$getTypes().put(location, new SpriteSourceType(codec));
     }
 }

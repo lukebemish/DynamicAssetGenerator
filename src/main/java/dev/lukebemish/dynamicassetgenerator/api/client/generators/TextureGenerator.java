@@ -68,7 +68,7 @@ public class TextureGenerator implements ResourceGenerator {
     }
 
     private ResourceLocation getOutputLocation() {
-        return new ResourceLocation(this.outputLocation.getNamespace(), "textures/"+this.outputLocation.getPath()+".png");
+        return ResourceLocation.fromNamespaceAndPath(this.outputLocation.getNamespace(), "textures/"+this.outputLocation.getPath()+".png");
     }
 
     @Override

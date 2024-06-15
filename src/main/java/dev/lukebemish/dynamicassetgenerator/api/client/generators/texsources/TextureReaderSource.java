@@ -37,7 +37,7 @@ public final class TextureReaderSource implements TexSource {
 
     @Override
     public IoSupplier<NativeImage> getSupplier(TexSourceDataHolder data, ResourceGenerationContext context) {
-        ResourceLocation outRl = new ResourceLocation(this.getPath().getNamespace(), "textures/" + this.getPath().getPath() + ".png");
+        ResourceLocation outRl = ResourceLocation.fromNamespaceAndPath(this.getPath().getNamespace(), "textures/" + this.getPath().getPath() + ".png");
         return () -> {
             try {
                 var in = context.getResourceSource().getResource(outRl);
@@ -56,7 +56,7 @@ public final class TextureReaderSource implements TexSource {
 
     @Override
     public @NonNull <T> DataResult<T> persistentCacheData(DynamicOps<T> ops, ResourceGenerationContext context) {
-        ResourceLocation outRl = new ResourceLocation(this.getPath().getNamespace(), "textures/" + this.getPath().getPath() + ".png");
+        ResourceLocation outRl = ResourceLocation.fromNamespaceAndPath(this.getPath().getNamespace(), "textures/" + this.getPath().getPath() + ".png");
         var supplier = context.getResourceSource().getResource(outRl);
         if (supplier != null) {
             try (var is = supplier.get()) {

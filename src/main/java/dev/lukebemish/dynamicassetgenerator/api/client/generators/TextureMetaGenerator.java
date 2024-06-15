@@ -86,7 +86,7 @@ public class TextureMetaGenerator implements ResourceGenerator {
     public @NonNull <T> DataResult<T> persistentCacheData(DynamicOps<T> ops, ResourceLocation location, ResourceGenerationContext context) {
         var builder = ops.listBuilder();
         for (var s : sources) {
-            ResourceLocation metaLocation = new ResourceLocation(s.getNamespace(), "textures/" + s.getPath() + ".png.mcmeta");
+            ResourceLocation metaLocation = ResourceLocation.fromNamespaceAndPath(s.getNamespace(), "textures/" + s.getPath() + ".png.mcmeta");
             var supplier = context.getResourceSource().getResource(metaLocation);
             if (supplier == null) {
                 builder.add(ops.empty());
@@ -112,7 +112,7 @@ public class TextureMetaGenerator implements ResourceGenerator {
 
         return () -> {
             List<Pair<ResourceLocation, JsonObject>> originals = sources.stream().<Pair<ResourceLocation, JsonObject>>map(s -> {
-                ResourceLocation metaLocation = new ResourceLocation(s.getNamespace(), "textures/" + s.getPath() + ".png.mcmeta");
+                ResourceLocation metaLocation = ResourceLocation.fromNamespaceAndPath(s.getNamespace(), "textures/" + s.getPath() + ".png.mcmeta");
                 try {
                     var resource = context.getResourceSource().getResource(metaLocation);
                     if (resource == null) {
@@ -150,7 +150,7 @@ public class TextureMetaGenerator implements ResourceGenerator {
 
     @Override
     public @NonNull Set<ResourceLocation> getLocations(ResourceGenerationContext context) {
-        return Set.of(new ResourceLocation(outputLocation.getNamespace(),"textures/"+ outputLocation.getPath()+".png.mcmeta"));
+        return Set.of(ResourceLocation.fromNamespaceAndPath(outputLocation.getNamespace(),"textures/"+ outputLocation.getPath()+".png.mcmeta"));
     }
 
     @Override

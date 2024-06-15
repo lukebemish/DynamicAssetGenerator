@@ -19,7 +19,7 @@ public final class LocationUtils {
         String[] parts = location.getPath().split("/", 2);
         if (parts.length == 1)
             return Pair.of("", location);
-        return new Pair<>(parts[0], new ResourceLocation(location.getNamespace(), parts[1]));
+        return new Pair<>(parts[0], ResourceLocation.fromNamespaceAndPath(location.getNamespace(), parts[1]));
     }
 
     /**
@@ -31,6 +31,6 @@ public final class LocationUtils {
         int index = location.getPath().lastIndexOf('.');
         if (index == -1)
             return Pair.of("", location);
-        return new Pair<>(location.getPath().substring(index + 1), new ResourceLocation(location.getNamespace(), location.getPath().substring(0, index)));
+        return new Pair<>(location.getPath().substring(index + 1), ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath().substring(0, index)));
     }
 }

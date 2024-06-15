@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import dev.lukebemish.dynamicassetgenerator.impl.client.platform.PlatformClient;
 import dev.lukebemish.dynamicassetgenerator.impl.mixin.SpriteSourcesAccessor;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 
@@ -29,7 +30,7 @@ public class PlatformClientImpl implements PlatformClient {
         if (SPRITE_SOURCES_REGISTERED) return;
         SPRITE_SOURCES_REGISTERED = true;
         for (var pair : SPRITE_SOURCE_QUEUE) {
-            SpriteSourcesAccessor.dynamic_asset_generator$invokeRegister(pair.getFirst().toString(), pair.getSecond());
+            SpriteSourcesAccessor.dynamic_asset_generator$getTypes().put(pair.getFirst(), new SpriteSourceType(pair.getSecond()));
         }
     }
 }

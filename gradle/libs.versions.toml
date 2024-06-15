@@ -1,21 +1,21 @@
 [versions]
-minecraft = "1.20.6"
+minecraft = "1.21"
 parchment = "2024.04.14"
 
-neoforge = "20.6.1-beta"
+neoforge = "21.0.6-beta"
 
-fabric_loader = "0.15.10"
-fabric_api = "0.97.8+1.20.6"
+fabric_loader = "0.15.11"
+fabric_api = "0.100.1+1.21"
 
 fabric_mixin = "0.13.3+mixin.0.8.5"
 
-modsdotgroovy = "2.0.0-beta.22"
+modsdotgroovy = "2.0.0-beta.28"
 
 modpublish = "0.5.1"
 
-owolib = "0.12.6+1.20.3"
+owolib = "0.12.9+1.20.5"
 
-managedversioning = "1.2.17"
+managedversioning = "1.2.19"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }

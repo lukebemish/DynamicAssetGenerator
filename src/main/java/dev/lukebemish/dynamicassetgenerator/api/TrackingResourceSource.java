@@ -49,7 +49,7 @@ public class TrackingResourceSource implements ResourceGenerationContext.Resourc
 
     private void addLocation(ResourceLocation location) {
         if (location.getPath().startsWith(prefix) && location.getPath().endsWith(suffix)) {
-            unsafeAddLocation(new ResourceLocation(location.getNamespace(), location.getPath().substring(prefix.length(), location.getPath().length() - suffix.length())));
+            unsafeAddLocation(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath().substring(prefix.length(), location.getPath().length() - suffix.length())));
         }
     }
 

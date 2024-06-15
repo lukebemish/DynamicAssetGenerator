@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public record BuiltinSpriteProvider(Map<ResourceLocation, TexSource> sources, @Nullable ResourceLocation location) implements SpriteProvider<BuiltinSpriteProvider> {
-    public static final ResourceLocation LOCATION = new ResourceLocation(DynamicAssetGenerator.MOD_ID, "tex_sources");
+    public static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(DynamicAssetGenerator.MOD_ID, "tex_sources");
     public static final MapCodec<BuiltinSpriteProvider> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         Codec.unboundedMap(ResourceLocation.CODEC, TexSource.CODEC).fieldOf("sources").forGetter(BuiltinSpriteProvider::sources),
         ResourceLocation.CODEC.optionalFieldOf("location").forGetter(s -> Optional.ofNullable(s.location()))

@@ -91,7 +91,7 @@ public class OwoLibProviderWrapper implements ConditionalInvisibleResourceProvid
                             DynamicAssetGenerator.LOGGER.error("Error encoding tag file from OwoLib entries: " + e.getMessage());
                             return;
                         }
-                        tagMap.put(new ResourceLocation(key.tagId().getNamespace(), "tags/" + key.type() + "/" + key.tagId().getPath() + ".json"),
+                        tagMap.put(ResourceLocation.fromNamespaceAndPath(key.tagId().getNamespace(), "tags/" + key.type() + "/" + key.tagId().getPath() + ".json"),
                                 DynamicAssetGenerator.GSON.toJson(encoded));
                     });
                 }

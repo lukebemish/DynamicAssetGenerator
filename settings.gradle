@@ -27,8 +27,8 @@ pluginManagement {
 }
 
 plugins {
-    id 'dev.lukebemish.conventions' version '0.1.9'
-    id 'dev.lukebemish.multisource' version '0.1.7'
+    id 'dev.lukebemish.conventions' version '0.1.10'
+    id 'dev.lukebemish.multisource' version '0.1.8'
 }
 
 rootProject.name = 'dynamicassetgenerator'
