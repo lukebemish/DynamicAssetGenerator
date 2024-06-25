@@ -15,15 +15,14 @@ import java.util.stream.Stream;
 public class QuiltPlatformMinimal extends FabricPlatform {
     public static final QuiltPlatformMinimal INSTANCE = new QuiltPlatformMinimal();
 
-    private static final boolean isQFAPIPresent = FabricLoader.getInstance().isModLoaded("quilted_fabric_api");
-    private static final String GROUP_PACK_CLASS = "org.quiltmc.qsl.resource.loader.api.GroupResourcePack";
+    private static final boolean isQslModulePresent = FabricLoader.getInstance().isModLoaded("quilt_resource_loader");
     private static final @Nullable Class<?> GROUP_PACK_RESOURCES;
     private static final @Nullable MethodHandle GET_GROUP_PACK_PACKS;
 
     static {
         Class<?> clazz;
         try {
-            clazz = FabricPlatform.class.getClassLoader().loadClass(GROUP_PACK_CLASS);
+            clazz = Class.forName("org.quiltmc.qsl.resource.loader.api.GroupPack", false, FabricPlatform.class.getClassLoader());
         } catch (ClassNotFoundException e) {
             clazz = null;
         }
@@ -35,15 +34,13 @@ public class QuiltPlatformMinimal extends FabricPlatform {
             var lookup = MethodHandles.lookup();
             MethodHandle getter;
             try {
-                var privateLookup = MethodHandles.privateLookupIn(clazz, lookup);
-                @SuppressWarnings("rawtypes") Class<List> listClazz = List.class;
-                getter = privateLookup.findVirtual(clazz, "getPacks", MethodType.methodType(listClazz));
+                getter = lookup.findVirtual(clazz, "getPacks", MethodType.methodType(List.class));
             } catch (IllegalAccessException | NoSuchMethodException e) {
                 getter = null;
             }
             GET_GROUP_PACK_PACKS = getter;
         }
-        if (GROUP_PACK_RESOURCES == null || GET_GROUP_PACK_PACKS == null && isQFAPIPresent) {
+        if ((GROUP_PACK_RESOURCES == null || GET_GROUP_PACK_PACKS == null) && isQslModulePresent) {
             DynamicAssetGenerator.LOGGER.error("On quilt but could not find quilt class/field to unwrap grouped resources - Dynamic Asset Generator may not work right!");
         }
     }
