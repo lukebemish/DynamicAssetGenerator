@@ -5,7 +5,7 @@ parchment = "2024.04.14"
 neoforge = "21.0.6-beta"
 
 fabric_loader = "0.15.11"
-fabric_api = "0.100.1+1.21"
+fabric_api = "0.101.2+"
 
 fabric_mixin = "0.13.3+mixin.0.8.5"
 
