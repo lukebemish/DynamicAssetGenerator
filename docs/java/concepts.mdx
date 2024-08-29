@@ -9,7 +9,7 @@ generating assets and data. Resource caches have an identifier associated with t
 
 ```java
 public static final DataResourceCache DATA_CACHE =
-    ResourceCache.register(new DataResourceCache(new ResourceLocation("my_mod", "data")));
+    ResourceCache.register(new DataResourceCache(ResourceLocation.fromNamespaceAndPath("my_mod", "data")));
 ```
 
 `AssetResourceCache` is a similar built-in implementation for client resources.
